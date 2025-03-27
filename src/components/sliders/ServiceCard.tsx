@@ -1,5 +1,5 @@
 import React from 'react';
-import { ServiceData } from '../../types/marketplace';
+import { ServiceData } from '../../types/sliders';
 import { CompanyLogo } from '../common/CompanyLogo';
 
 interface ServiceCardProps {
@@ -39,3 +39,5 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
     </div>
   );
 };
+
+export default ServiceCard;

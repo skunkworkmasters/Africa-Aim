@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CreatePostData {
   content: string;
@@ -12,15 +14,59 @@ export const useCreatePost = () => {
   const createPost = async (data: CreatePostData) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Here you would normally:
-      // 1. Upload the image to storage if present
-      // 2. Create the post with the image URL
-      // 3. Update the local posts state
+      // Get current user
+      const { data: userData, error: userError } = await supabase.auth.getUser();
       
-      console.log('Post created:', data);
+      if (userError || !userData.user) {
+        throw new Error('User not authenticated');
+      }
+
+      let imageUrl = null;
+
+      // Upload image to storage if present
+      if (data.image) {
+        const fileExt = data.image.name.split('.').pop();
+        const fileName = `${uuidv4()}.${fileExt}`;
+        const filePath = `posts/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(filePath, data.image);
+
+        if (uploadError) {
+          throw new Error('Error uploading image');
+        }
+
+        // Get public URL for the uploaded image
+        const { data: urlData } = supabase.storage
+          .from('images')
+          .getPublicUrl(filePath);
+
+        imageUrl = urlData.publicUrl;
+      }
+
+      // Create post in database
+      const { error: insertError } = await supabase
+        .from('posts')
+        .insert({
+          id: uuidv4(),
+          content: data.content,
+          tags: data.tags,
+          image_url: imageUrl,
+          user_id: userData.user.id,
+          created_at: new Date().toISOString(),
+          likes: 0,
+          dislikes: 0
+        });
+
+      if (insertError) {
+        throw new Error('Error creating post');
+      }
+
+      console.log('Post created successfully');
+    } catch (error) {
+      console.error('Error in createPost:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }

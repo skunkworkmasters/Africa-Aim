@@ -10,7 +10,6 @@ const menuSections: MenuSection[] = [
   {
     title: 'Enterprise Services',
     links: [
-      { label: 'Directory', href: '/directory' },
       { label: 'Services', href: '/services' },
       { label: 'API Service', href: '/api-service' },
     ],
@@ -20,7 +19,6 @@ const menuSections: MenuSection[] = [
     links: [
       { label: 'Become Member', href: '/membership' },
       { label: 'Success Stories', href: '/success-stories' },
-      { label: 'Education', href: '/education' },
     ],
   },
   {

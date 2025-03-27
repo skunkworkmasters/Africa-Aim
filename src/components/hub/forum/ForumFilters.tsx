@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Filter, TrendingUp, Clock, Star, Search } from 'lucide-react';
-import CreatePostModal from './CreatePostModal';
+import CreateForumPostModal from './CreateForumPostModal';
 
-interface PostFiltersProps {
-  onFilterChange?: (filter: 'trending' | 'latest' | 'top') => void;
-  activeFilter?: 'trending' | 'latest' | 'top';
-  onSearch?: (query: string) => void;
+interface ForumFiltersProps {
+  onFilterChange: (filter: 'trending' | 'latest' | 'top') => void;
+  activeFilter: 'trending' | 'latest' | 'top';
+  onSearch: (query: string) => void;
 }
 
-const PostFilters: React.FC<PostFiltersProps> = ({ 
+const ForumFilters: React.FC<ForumFiltersProps> = ({ 
   onFilterChange, 
-  activeFilter = 'trending',
+  activeFilter,
   onSearch
 }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -19,15 +19,7 @@ const PostFilters: React.FC<PostFiltersProps> = ({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    if (onSearch) {
-      onSearch(query);
-    }
-  };
-
-  const handleFilterClick = (filter: 'trending' | 'latest' | 'top') => {
-    if (onFilterChange) {
-      onFilterChange(filter);
-    }
+    onSearch(query);
   };
 
   return (
@@ -45,7 +37,7 @@ const PostFilters: React.FC<PostFiltersProps> = ({
                   ? 'text-purple-600 dark:text-purple-400' 
                   : 'text-gray-700 dark:text-gray-300'
               }`}
-              onClick={() => handleFilterClick('trending')}
+              onClick={() => onFilterChange('trending')}
             >
               <TrendingUp className="h-4 w-4" />
               Trending
@@ -56,7 +48,7 @@ const PostFilters: React.FC<PostFiltersProps> = ({
                   ? 'text-purple-600 dark:text-purple-400' 
                   : 'text-gray-700 dark:text-gray-300'
               }`}
-              onClick={() => handleFilterClick('latest')}
+              onClick={() => onFilterChange('latest')}
             >
               <Clock className="h-4 w-4" />
               Latest
@@ -67,7 +59,7 @@ const PostFilters: React.FC<PostFiltersProps> = ({
                   ? 'text-purple-600 dark:text-purple-400' 
                   : 'text-gray-700 dark:text-gray-300'
               }`}
-              onClick={() => handleFilterClick('top')}
+              onClick={() => onFilterChange('top')}
             >
               <Star className="h-4 w-4" />
               Top
@@ -83,23 +75,21 @@ const PostFilters: React.FC<PostFiltersProps> = ({
       </div>
 
       {/* Search Bar */}
-      {onSearch && (
-        <div className="mb-6 relative">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search posts..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-            />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-          </div>
+      <div className="mb-6 relative">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search posts..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+          />
+          <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
         </div>
-      )}
+      </div>
 
       {showCreateModal && (
-        <CreatePostModal
+        <CreateForumPostModal
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
             // Refresh posts after creation
@@ -111,4 +101,4 @@ const PostFilters: React.FC<PostFiltersProps> = ({
   );
 };
 
-export default PostFilters;
+export default ForumFilters;

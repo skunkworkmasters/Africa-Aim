@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useAuth as useSupabaseAuth } from '../../contexts/SupabaseAuthContext';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import DashboardMetrics from '../../components/dashboard/DashboardMetrics';
 import ActivityFeed from '../../components/dashboard/ActivityFeed';
@@ -10,8 +11,19 @@ import RevenueChart from '../../components/dashboard/RevenueChart';
 
 const ProviderDashboard = () => {
   const { user } = useAuth();
+  const { user: supabaseUser } = useSupabaseAuth();
 
-  if (!user) return null;
+  // If neither authentication system has a user, return null
+  if (!user && !supabaseUser) return null;
+
+  // Determine which user object to use
+  const activeUser = user || supabaseUser;
+  
+  // Extract name from the appropriate user object
+  const userName = user?.name || 
+                  supabaseUser?.user_metadata?.name || 
+                  supabaseUser?.email?.split('@')[0] || 
+                  'User';
 
   return (
     <DashboardLayout>
@@ -20,7 +32,7 @@ const ProviderDashboard = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Welcome back, {user.name}!
+              Welcome back, {userName}!
             </h1>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Here's what's happening with your AI services today.

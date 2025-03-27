@@ -23,24 +23,8 @@ const Hero = () => {
           <p className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             Connect with AI professionals, access cutting-edge resources, and drive innovation across the continent. Join Africa's fastest-growing AI community.
           </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-            <div className="rounded-md shadow">
-              <a
-                href="#marketplace"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 md:py-4 md:text-lg md:px-10"
-              >
-                Join Marketplace
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
-            </div>
-            <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-              <a
-                href="#directory"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-purple-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
-              >
-                Browse Directory
-              </a>
-            </div>
+          <div className="mt-5 max-w-md mx-auto md:mt-8">
+            {/* Buttons removed as requested */}
           </div>
         </div>
       </div>

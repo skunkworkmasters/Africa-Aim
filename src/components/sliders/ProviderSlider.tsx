@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { providerData } from '../../data/providers';
+import { mockProviderData } from '../../data/mockData';
 
 const ProviderSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const itemsPerSlide = 3;
-  const totalSlides = Math.ceil(providerData.length / itemsPerSlide);
+  const totalSlides = Math.ceil(mockProviderData.length / itemsPerSlide);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,7 +28,7 @@ const ProviderSlider = () => {
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {providerData.map((provider) => (
+              {mockProviderData.map((provider) => (
                 <div 
                   key={provider.id}
                   className="w-full md:w-1/3 flex-shrink-0 px-4"

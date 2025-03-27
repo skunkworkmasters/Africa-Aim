@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Menu, X, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useAuth as useSupabaseAuth } from '../contexts/SupabaseAuthContext';
 import ThemeToggle from './ThemeToggle';
+import UserProfile from './auth/UserProfile';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const supabaseAuth = useSupabaseAuth();
 
   const handleLogout = () => {
     logout();
@@ -26,30 +29,24 @@ const Header = () => {
     }
   };
 
-  const menuItems = [
+  interface MenuItem {
+    label: string;
+    path?: string;
+    dropdown?: Array<{ label: string; path: string }>;
+  }
+
+  const menuItems: MenuItem[] = [
     { 
-      label: 'Hub',
-      path: '/hub',
+      label: 'Models',
+      path: '/hub?tab=models',
     },
     { 
-      label: 'Marketplace',
-      path: '/marketplace',
+      label: 'Datasets',
+      path: '/hub?tab=datasets',
     },
     { 
-      label: 'Directory',
-      path: '/directory',
-    },
-    { 
-      label: 'Education',
-      dropdown: [
-        { label: 'Courses', path: '/courses' },
-        { label: 'Certifications', path: '/certifications' },
-        { label: 'Resources', path: '/resources' }
-      ]
-    },
-    { 
-      label: 'Pricing', 
-      path: '/pricing' 
+      label: 'Forum',
+      path: '/hub?tab=forum',
     },
   ];
 
@@ -100,37 +97,15 @@ const Header = () => {
             </div>
             <div className="hidden md:flex items-center space-x-4">
               <ThemeToggle />
-              {user ? (
-                <div className="flex items-center space-x-4">
-                  <Link
-                    to={getDashboardPath()}
-                    className="text-gray-300 hover:bg-gray-800 hover:text-white px-4 py-2 rounded-md text-sm font-medium"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="text-gray-300 hover:text-white"
-                    title="Sign out"
-                  >
-                    <LogOut className="h-5 w-5" />
-                  </button>
-                </div>
+              {supabaseAuth.user ? (
+                <UserProfile />
               ) : (
-                <div className="flex gap-4">
-                  <Link
-                    to="/login"
-                    className="text-gray-300 hover:bg-gray-800 hover:text-white px-4 py-2 rounded-md text-sm font-medium"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-700 transition-colors"
-                  >
-                    Register
-                  </Link>
-                </div>
+                <Link
+                  to="/login"
+                  className="text-gray-300 hover:bg-gray-800 hover:text-white px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  Login/Signup
+                </Link>
               )}
             </div>
             <div className="md:hidden">
@@ -189,31 +164,22 @@ const Header = () => {
                   Dashboard
                 </Link>
               )}
-              {user ? (
+              {supabaseAuth.user ? (
                 <button
-                  onClick={handleLogout}
+                  onClick={() => supabaseAuth.signOut()}
                   className="w-full flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
                 >
                   <LogOut className="h-4 w-4" />
                   Sign out
                 </button>
               ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="block w-full text-center text-gray-300 hover:bg-gray-800 hover:text-white px-4 py-2 rounded-md text-sm font-medium"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="block w-full text-center bg-emerald-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-700"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Register
-                  </Link>
-                </>
+                <Link
+                  to="/login"
+                  className="block w-full text-center text-gray-300 hover:bg-gray-800 hover:text-white px-4 py-2 rounded-md text-sm font-medium"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login/Signup
+                </Link>
               )}
             </div>
           </div>

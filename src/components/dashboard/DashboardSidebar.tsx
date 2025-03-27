@@ -6,7 +6,8 @@ import {
   MessageSquare, 
   BarChart3, 
   Package, 
-  Users 
+  Users,
+  UserCircle
 } from 'lucide-react';
 
 const menuItems = [
@@ -34,6 +35,11 @@ const menuItems = [
     label: 'Customers', 
     icon: Users, 
     path: '/provider/customers' 
+  },
+  { 
+    label: 'Community', 
+    icon: UserCircle, 
+    path: '/provider/community' 
   },
   { 
     label: 'Settings', 

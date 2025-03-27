@@ -1,4 +1,4 @@
-export type TabType = 'models' | 'datasets' | 'community';
+export type TabType = 'models' | 'datasets' | 'community' | 'forum';
 
 export interface Model {
   id: string;

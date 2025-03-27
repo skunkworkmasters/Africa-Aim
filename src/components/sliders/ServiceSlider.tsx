@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { marketplaceData } from '../../data/marketplace';
+import { mockServiceData } from '../../data/mockData';
+import ServiceCard from './ServiceCard';
 
 const ServiceSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const itemsPerSlide = 4;
-  const totalSlides = Math.ceil(marketplaceData.length / itemsPerSlide);
+  const totalSlides = Math.ceil(mockServiceData.length / itemsPerSlide);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,47 +29,12 @@ const ServiceSlider = () => {
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {marketplaceData.map((service) => (
+              {mockServiceData.map((service) => (
                 <div 
                   key={service.id}
                   className="w-full sm:w-1/2 lg:w-1/4 flex-shrink-0 px-4"
                 >
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-full">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">
-                            {service.title}
-                          </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">{service.provider}</p>
-                        </div>
-                        <img
-                          src={`https://logo.clearbit.com/${service.provider.toLowerCase().replace(/\s+/g, '')}.com`}
-                          alt={`${service.provider} logo`}
-                          className="w-8 h-8 rounded-full object-contain bg-white"
-                          onError={(e) => {
-                            e.currentTarget.src = 'https://via.placeholder.com/32';
-                          }}
-                        />
-                      </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">
-                        {service.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="px-2 py-1 text-xs font-medium text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900 rounded-full">
-                          {service.categories[0]}
-                        </span>
-                        <button className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300">
-                          Learn More
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <ServiceCard service={service} />
                 </div>
               ))}
             </div>
