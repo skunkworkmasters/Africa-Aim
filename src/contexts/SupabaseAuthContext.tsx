@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../utils/supabase';
 
 interface AuthContextType {
   session: Session | null;
@@ -27,8 +27,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log('SupabaseAuthContext: Initializing auth state');
+    
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log('SupabaseAuthContext: Initial session check', 
+        session ? 'Session found' : 'No session',
+        error ? `Error: ${error.message}` : 'No error'
+      );
+      
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -36,12 +43,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('SupabaseAuthContext: Auth state changed', 
+        _event,
+        session ? 'New session' : 'No session'
+      );
+      
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     return () => {
+      console.log('SupabaseAuthContext: Cleaning up auth subscription');
       subscription.unsubscribe();
     };
   }, []);

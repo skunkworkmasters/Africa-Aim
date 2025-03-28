@@ -19,6 +19,7 @@ import CommunityPage from './pages/dashboard/CommunityPage';
 import AuthButtons from './components/auth/AuthButtons';
 import PostsList from './components/examples/PostsList';
 import ModelsList from './components/examples/ModelsList';
+import SupabaseDebugPage from './pages/SupabaseDebugPage';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
                     <Route path="/supabase-auth" element={<AuthButtons />} />
                     <Route path="/supabase-posts" element={<PostsList />} />
                     <Route path="/supabase-models" element={<ModelsList />} />
+                    <Route path="/supabase-debug" element={<SupabaseDebugPage />} />
                     {/* Catch-all route for non-existent pages */}
                     <Route path="*" element={
                       <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">

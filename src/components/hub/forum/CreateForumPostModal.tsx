@@ -19,7 +19,12 @@ const CreateForumPostModal: React.FC<CreateForumPostModalProps> = ({ onClose, on
 
     try {
       // Pass null for image since forum posts don't have images
-      await createPost({ content, tags, image: null });
+      await createPost({ 
+        content, 
+        tags, 
+        image: null,
+        isForum: true // Explicitly set as forum post
+      });
       onSuccess?.();
       onClose();
     } catch (error) {

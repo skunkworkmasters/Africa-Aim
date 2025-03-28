@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../utils/supabase';
 
 interface Model {
   id: number;
@@ -39,10 +39,12 @@ const ModelsList: React.FC = () => {
   }, [selectedType]);
 
   const fetchModels = async () => {
+    console.log('ModelsList: Starting to fetch models', { selectedType });
     try {
       setLoading(true);
       setError(null);
 
+      console.log('ModelsList: Building query');
       let query = supabase
         .from('models')
         .select(`
@@ -55,15 +57,29 @@ const ModelsList: React.FC = () => {
         .order('likes', { ascending: false });
 
       if (selectedType) {
+        console.log('ModelsList: Applying type filter', selectedType);
         query = query.eq('model_type', selectedType);
       }
 
+      console.log('ModelsList: Executing query');
       const { data, error } = await query;
 
+      console.log('ModelsList: Query result', 
+        error ? `Error: ${error.message}` : `Success: ${data?.length || 0} models found`
+      );
+
       if (error) {
-        throw error;
+        console.error('ModelsList: Error details:', error);
+        
+        if (error.code === '42501') {
+          setError('Permission denied: Row-Level Security is preventing access to models. You may need to be authenticated.');
+        } else {
+          throw error;
+        }
+        return;
       }
 
+      console.log('ModelsList: Setting models', data);
       setModels(data || []);
     } catch (err) {
       console.error('Error fetching models:', err);
@@ -74,11 +90,17 @@ const ModelsList: React.FC = () => {
   };
 
   const fetchModelTypes = async () => {
+    console.log('ModelsList: Starting to fetch model types');
     try {
+      console.log('ModelsList: Building types query');
       const { data, error } = await supabase
         .from('models')
         .select('model_type')
         .order('model_type');
+
+      console.log('ModelsList: Types query result', 
+        error ? `Error: ${error.message}` : `Success: ${data?.length || 0} types found`
+      );
 
       if (error) {
         throw error;
@@ -86,6 +108,7 @@ const ModelsList: React.FC = () => {
 
       // Extract unique model types
       const types = [...new Set(data?.map(item => item.model_type))];
+      console.log('ModelsList: Setting model types', types);
       setModelTypes(types as string[]);
     } catch (err) {
       console.error('Error fetching model types:', err);

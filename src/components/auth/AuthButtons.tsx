@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signInWithGitHub, signInWithGoogle, signOut, getCurrentUser } from '../../lib/supabase';
+import { signInWithGitHub, signInWithGoogle, signOut, getCurrentUser } from '../../utils/supabaseAuth';
 
 const AuthButtons: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Test</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .counter {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .count {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Simple Counter component
+        function Counter() {
+            const [count, setCount] = React.useState(0);
+            
+            React.useEffect(() => {
+                console.log('Counter component mounted');
+                return () => console.log('Counter component unmounted');
+            }, []);
+            
+            return (
+                <div className="counter">
+                    <button onClick={() => setCount(count - 1)}>Decrement</button>
+                    <span className="count">{count}</span>
+                    <button onClick={() => setCount(count + 1)}>Increment</button>
+                </div>
+            );
+        }
+        
+        // App component
+        function App() {
+            console.log('App component rendering');
+            
+            return (
+                <div className="container">
+                    <h1>React Test</h1>
+                    <p>If you can see this, React is rendering correctly.</p>
+                    <Counter />
+                </div>
+            );
+        }
+        
+        // Render the App component to the DOM
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+        
+        console.log('React test script loaded successfully');
+    </script>
+</body>
+</html>

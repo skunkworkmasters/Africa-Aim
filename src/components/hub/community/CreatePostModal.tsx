@@ -19,7 +19,12 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSuccess })
     if (!content.trim()) return;
 
     try {
-      await createPost({ content, tags, image });
+      await createPost({ 
+        content, 
+        tags, 
+        image,
+        isForum: false // Explicitly set as community post (not forum)
+      });
       onSuccess?.();
       onClose();
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../utils/supabase';
 
 interface Post {
   id: number;
@@ -34,12 +34,14 @@ const PostsList: React.FC = () => {
   }, [isForum]);
 
   const fetchPosts = async () => {
+    console.log('PostsList: Starting to fetch posts', { isForum });
     try {
       setLoading(true);
       setError(null);
 
       // Query posts with author information
-      const { data, error } = await supabase
+      console.log('PostsList: Building query');
+      const query = supabase
         .from('posts')
         .select(`
           *,
@@ -53,10 +55,25 @@ const PostsList: React.FC = () => {
         .order('inserted_at', { ascending: false })
         .limit(10);
 
+      console.log('PostsList: Executing query');
+      const { data, error } = await query;
+
+      console.log('PostsList: Query result', 
+        error ? `Error: ${error.message}` : `Success: ${data?.length || 0} posts found`
+      );
+
       if (error) {
-        throw error;
+        console.error('PostsList: Error details:', error);
+        
+        if (error.code === '42501') {
+          setError('Permission denied: Row-Level Security is preventing access to posts. You may need to be authenticated.');
+        } else {
+          throw error;
+        }
+        return;
       }
 
+      console.log('PostsList: Setting posts', data);
       setPosts(data || []);
     } catch (err) {
       console.error('Error fetching posts:', err);
